@@ -15,6 +15,8 @@ sizeBall = 10
 listBrick = []
 nbBricks = 1
 
+time = millis()
+
 def setup():
     global xBall, yBall, xRack, yRack
     
@@ -32,9 +34,21 @@ def draw():
     clear()
     fill(255)
     
+    thetime()
     drawRacket()
     drawBall()
     coll()
+
+def thetime():
+    global time, xspdB, yspdB
+    
+    time -= time +1
+    time *= -1
+    
+    xspdB *= time
+    yspdB *= time
+    
+    time = millis()
 
 def drawRacket():
     global xRack, yRack, recWidth, recHeight
