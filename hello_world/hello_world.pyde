@@ -1,6 +1,9 @@
 xBall = 0
 yBall = 0
 
+ballColl = False
+ratio = 0
+
 xRack = 0
 yRack = 0
 
@@ -9,6 +12,7 @@ yspdB = 0.15
 
 ballSpeed = 1
 ballAngle = random(0, PI)
+angleMax = PI/1.9
 
 recHeight = 20
 recWidth = 100
@@ -43,6 +47,9 @@ def draw():
 
     drawRacket()
     drawBall()
+    
+    ballColl = False
+    
     coll()
     
     dt = millis() - lastFrameTime
@@ -63,7 +70,7 @@ def drawBall():
     yBall += sin(ballAngle) * yspdB * dt
         
 def coll():
-    global xBall, yBall, xRack, yRack, xspdB, yspdB, recWidth, recHeight, sizeBall, ballAngle
+    global xBall, yBall, xRack, yRack, xspdB, yspdB, recWidth, recHeight, sizeBall, ballAngle, ballColl, ratio, angleMax
     
     #collision mur verticaux
     
@@ -88,4 +95,30 @@ def coll():
         if (xBall > xRack) and (xBall < xRack + recWidth):
             ballAngle = -ballAngle
             yBall = yRack - sizeBall
+            ballColl = True
+            
+        #détection coordonnées
+
+        if(ballColl is True):
+            ratio = (xBall - xRack) / recWidth
+            print (ratio)
+            if(xRack < ratio < recWidth/2):
+                ballAngle = -ballAngle * ratio
+                ballColl = False
+            elif ratio == recWidth/2:
+                ballAngle = -ballAngle
+                ballColl = False
+            elif(recWidth/2 < ratio < recWidth):
+                ballAngle = -ballAngle * ratio
+                ballColl = False
+            else:
+                ballColl = False
+                
+                """
+                if ratio < 50 :
+                    angle =  (PI - ( (PI/2) * (ratio/50) ) ) 
+
+                elif ratio > 50 :
+                    angle = ( (PI/2) - ((PI/2)/(ratio/100)) )*-1
+                """
     
