@@ -17,6 +17,11 @@ angleMax = PI/1.9
 recHeight = 20
 recWidth = 100
 
+xBrick = 250
+yBrick = 250
+brickWidth = 200
+brickHeight = 50
+
 sizeBall = 10
 
 listBrick = []
@@ -47,6 +52,7 @@ def draw():
 
     drawRacket()
     drawBall()
+    drawBricks()
     
     ballColl = False
     
@@ -58,19 +64,28 @@ def draw():
 
 def drawRacket():
     global xRack, yRack, recWidth, recHeight
-    barre = rect(xRack, yRack, recWidth, recHeight)
+    rect(xRack, yRack, recWidth, recHeight)
     
     xRack = mouseX - recWidth/2
     
 def drawBall():
     global xBall, yBall, xspdB, yspdB, sizeBall, dt, ballAngle, ballSpeed
-    balle = circle(xBall, yBall, 2*sizeBall)
+    circle(xBall, yBall, 2*sizeBall)
     
     xBall += cos(ballAngle) * xspdB * dt
     yBall += sin(ballAngle) * yspdB * dt
+    
+def drawBricks():
+    global xBall, yBall, sizeBall, xspdB, yspdB, ballAngle
+    
+    fill(255)
+
+    rect(xBrick, yBrick, brickWidth, brickHeight)
+        
+    
         
 def coll():
-    global xBall, yBall, xRack, yRack, xspdB, yspdB, recWidth, recHeight, sizeBall, ballAngle, ballColl, ratio, angleMax
+    global xBall, yBall, xRack, yRack, xspdB, yspdB, recWidth, recHeight, sizeBall, ballAngle, ballColl, ratio, angleMax, brickWidth, brickHeight
     
     #collision mur verticaux
     
@@ -93,32 +108,26 @@ def coll():
     
     if (yRack + recHeight > yBall + sizeBall > yRack) and (yspdB > 0):
         if (xBall > xRack) and (xBall < xRack + recWidth):
-            ballAngle = -ballAngle
-            yBall = yRack - sizeBall
-            ballColl = True
-            
-        #détection coordonnées
+            if(xRack < xBall < xRack + recWidth):
+                ratio = (xBall - xRack - (recWidth/2)) / (recWidth/2)
+                ballAngle = -ballAngle - ratio * angleMax
+                yBall = yRack - sizeBall
+    
+    #collision bricks
 
-        if(ballColl is True):
-            ratio = (xBall - xRack) / recWidth
-            print (ratio)
-            if(xRack < ratio < recWidth/2):
-                ballAngle = -ballAngle * ratio
-                ballColl = False
-            elif ratio == recWidth/2:
-                ballAngle = -ballAngle
-                ballColl = False
-            elif(recWidth/2 < ratio < recWidth):
-                ballAngle = -ballAngle * ratio
-                ballColl = False
-            else:
-                ballColl = False
-                
-                """
-                if ratio < 50 :
-                    angle =  (PI - ( (PI/2) * (ratio/50) ) ) 
+    #Dessous
+        if yspdB > 0 and (yBrick + brickHeight > yBall + sizeBall > yBrick):
+            if (xBall > xBrick) and (xBall < xBrick + brickWidth):
+                print("ca tape par dessous")
+    
+    #Dessus
+    
+    
+    
+    #Droite
+    
+    
+    
+    #Gauche
 
-                elif ratio > 50 :
-                    angle = ( (PI/2) - ((PI/2)/(ratio/100)) )*-1
-                """
     
