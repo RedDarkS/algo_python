@@ -38,7 +38,8 @@ def setup():
     frameRate(60)
     
     xBall = width / 2
-    yBall = height / 2
+    yBall = 10
+    #height / 2
 
     xRack = width / 2
     yRack = height - 40
@@ -91,16 +92,16 @@ def coll():
     
     if xBall + sizeBall > width:
         ballAngle = PI - ballAngle
-        xBall + width-sizeBall
+        #xBall + width-sizeBall
     elif xBall - sizeBall < 0 :
         ballAngle = PI - ballAngle
-        xBall = sizeBall
+        #xBall = sizeBall
         
     #collision mur haut et bas
     
     if yBall - sizeBall < 0:
         ballAngle = -ballAngle
-        yBall = sizeBall
+        #yBall = sizeBall
     elif (yBall + sizeBall > height):
         ballAngle = -ballAngle
         
@@ -116,18 +117,26 @@ def coll():
     #collision bricks
 
     #Dessous
-        if yspdB > 0 and (yBrick + brickHeight > yBall + sizeBall > yBrick):
-            if (xBall > xBrick) and (xBall < xBrick + brickWidth):
-                print("ca tape par dessous")
+    if yspdB < 0 and (yBrick > yBall > yBrick + brickHeight):
+        if xBrick + brickWidth > xBall > xBrick:
+            print("tape dessous")
+            ballAngle = -ballAngle
     
     #Dessus
-    
-    
+    if yspdB > 0 and (yBrick < yBall < yBrick + brickHeight):
+        if xBrick + brickWidth > xBall > xBrick:
+            print("tape dessus")
+            ballAngle = -ballAngle
     
     #Droite
-    
-    
+    if yspdB != 0 and (yBrick < yBall < yBrick + brickHeight):
+        if xBrick > xBall > xBrick + brickWidth:
+            print("tape droite")
+            ballAngle = PI - ballAngle
     
     #Gauche
-
+    if yspdB != 0 and (yBrick < yBall < yBrick + brickHeight):
+        if xBrick + brickWidth < xBall < xBrick:
+            print("tape gauche")
+            ballAngle = PI - ballAngle
     
