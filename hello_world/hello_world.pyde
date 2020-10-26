@@ -11,7 +11,7 @@ xspdB = 0.25
 yspdB = 0.15
 
 ballSpeed = 1
-ballAngle = random(0, PI)
+ballAngle = random(PI/6, 3*PI/6)
 angleMax = PI/1.9
 
 recHeight = 20
@@ -19,7 +19,7 @@ recWidth = 100
 
 xBrick = 250
 yBrick = 250
-brickWidth = 200
+brickWidth = 50
 brickHeight = 50
 
 sizeBall = 10
@@ -38,8 +38,7 @@ def setup():
     frameRate(60)
     
     xBall = width / 2
-    yBall = 10
-    #height / 2
+    yBall = height / 3
 
     xRack = width / 2
     yRack = height - 40
@@ -53,7 +52,10 @@ def draw():
 
     drawRacket()
     drawBall()
-    drawBricks()
+    
+    for i in range(10):
+        
+        drawBricks(i*50, 50, 50, 20)
     
     ballColl = False
     
@@ -76,12 +78,38 @@ def drawBall():
     xBall += cos(ballAngle) * xspdB * dt
     yBall += sin(ballAngle) * yspdB * dt
     
-def drawBricks():
+def drawBricks(xBrick, yBrick, brickWidth, brickheight):
     global xBall, yBall, sizeBall, xspdB, yspdB, ballAngle
     
     fill(255)
 
     rect(xBrick, yBrick, brickWidth, brickHeight)
+    
+    #collision bricks
+    
+    if xBrick <= xBall < xBrick + brickWidth:
+        
+        #haut
+        if yBrick < yBall + sizeBall < yBrick + brickHeight and yspdB < 0:
+            ballAngle = -ballAngle
+            yBall = yBrick + sizeBall
+        
+        #bas
+        elif yBrick < yBall - sizeBall < yBrick + brickHeight and yspdB > 0:
+            ballAngle = -ballAngle
+            yBall = yBrick + brickHeight + sizeBall
+            
+    elif yBrick <= yBall < yBrick + brickHeight:
+        
+        #gauche
+        if xBrick < xBall + sizeBall < xBrick + brickWidth and xspdB > 0:
+            ballAngle = PI -ballAngle
+            xBall = xBrick - sizeBall
+        
+        #droite
+        elif xBrick < xBall - sizeBall < xBrick + brickWidth and xspdB < 0:
+            ballAngle = PI -ballAngle
+            xBall = xBrick + brickWidth + sizeBall
         
     
         
@@ -113,30 +141,3 @@ def coll():
                 ratio = (xBall - xRack - (recWidth/2)) / (recWidth/2)
                 ballAngle = -ballAngle - ratio * angleMax
                 yBall = yRack - sizeBall
-    
-    #collision bricks
-
-    #Dessous
-    if yspdB < 0 and (yBrick > yBall > yBrick + brickHeight):
-        if xBrick + brickWidth > xBall > xBrick:
-            print("tape dessous")
-            ballAngle = -ballAngle
-    
-    #Dessus
-    if yspdB > 0 and (yBrick < yBall < yBrick + brickHeight):
-        if xBrick + brickWidth > xBall > xBrick:
-            print("tape dessus")
-            ballAngle = -ballAngle
-    
-    #Droite
-    if yspdB != 0 and (yBrick < yBall < yBrick + brickHeight):
-        if xBrick > xBall > xBrick + brickWidth:
-            print("tape droite")
-            ballAngle = PI - ballAngle
-    
-    #Gauche
-    if yspdB != 0 and (yBrick < yBall < yBrick + brickHeight):
-        if xBrick + brickWidth < xBall < xBrick:
-            print("tape gauche")
-            ballAngle = PI - ballAngle
-    
