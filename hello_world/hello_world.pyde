@@ -20,11 +20,11 @@ recWidth = 100
 xBrick = 250
 yBrick = 250
 brickWidth = 50
-brickHeight = 50
+brickHeight = 30
 
 sizeBall = 10
 
-listBrick = []
+listBrick = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1,]
 nbBricks = 1
 
 dt = 0
@@ -53,11 +53,10 @@ def draw():
     drawRacket()
     drawBall()
     
-    for i in range(10):
-        
-        drawBricks(i*50, 50, 50, 20)
-    
-    ballColl = False
+    for i in range(len(listBrick)):
+        if (listBrick[i] > 0):
+            
+            drawBricks(i*50, 50, 50, 20, i)
     
     coll()
     
@@ -78,8 +77,8 @@ def drawBall():
     xBall += cos(ballAngle) * xspdB * dt
     yBall += sin(ballAngle) * yspdB * dt
     
-def drawBricks(xBrick, yBrick, brickWidth, brickheight):
-    global xBall, yBall, sizeBall, xspdB, yspdB, ballAngle
+def drawBricks(xBrick, yBrick, brickWidth, brickheight, index):
+    global xBall, yBall, sizeBall, xspdB, yspdB, ballAngle, listBrick
     
     fill(255)
 
@@ -93,11 +92,13 @@ def drawBricks(xBrick, yBrick, brickWidth, brickheight):
         if yBrick < yBall + sizeBall < yBrick + brickHeight and yspdB < 0:
             ballAngle = -ballAngle
             yBall = yBrick + sizeBall
+            listBrick[index] = 0
         
         #bas
         elif yBrick < yBall - sizeBall < yBrick + brickHeight and yspdB > 0:
             ballAngle = -ballAngle
             yBall = yBrick + brickHeight + sizeBall
+            listBrick[index] = 0
             
     elif yBrick <= yBall < yBrick + brickHeight:
         
@@ -105,11 +106,13 @@ def drawBricks(xBrick, yBrick, brickWidth, brickheight):
         if xBrick < xBall + sizeBall < xBrick + brickWidth and xspdB > 0:
             ballAngle = PI -ballAngle
             xBall = xBrick - sizeBall
+            listBrick[index] = 0
         
         #droite
         elif xBrick < xBall - sizeBall < xBrick + brickWidth and xspdB < 0:
             ballAngle = PI -ballAngle
             xBall = xBrick + brickWidth + sizeBall
+            listBrick[index] = 0
         
     
         
